@@ -597,7 +597,7 @@ if run_analysis or auto_run_analysis:
                     bbox = x1, y1, w, h
                     cls = int(box.cls[0])
                     if box.id is None:
-                        continue  # skip jika tidak ada id
+                        continue  
                     id = int(box.id[0])
                     if 0 <= cls < len(model.names):
                         currentClass = model.names[cls]
@@ -607,7 +607,6 @@ if run_analysis or auto_run_analysis:
                         color, _ = VEHICLE_COLORS[currentClass]
                         cvzone.cornerRect(img, bbox, l=9, rt=5, colorC=color)
 
-                        # Tambahkan ini agar garis selalu muncul
                         cv2.line(img, (LIMITS[0], LIMITS[1]), (LIMITS[2], LIMITS[3]), (25, 118, 210), 5)
 
                         garis_y = LIMITS[1]
@@ -665,8 +664,7 @@ if run_analysis or auto_run_analysis:
                 last_bar_update_minute = current_minute
 
                 interval = 5
-                current_interval = (current_minute + 1) // interval
-                num_intervals = (total_minutes + interval - 1) // interval
+                num_intervals = total_minutes // interval
 
                 html_table = '<div class="tabelku"><table>'
                 html_table += (
@@ -680,9 +678,9 @@ if run_analysis or auto_run_analysis:
 
                 for idx in range(num_intervals):
                     start_min = idx * interval
-                    end_min = min((idx + 1) * interval, total_minutes)
+                    end_min = (idx + 1) * interval
                     menit_label = f"{start_min+1}-{end_min}"
-                    if current_minute + 1 >= (idx + 1) * interval:
+                    if elapsed_seconds >= (idx + 1) * interval * 60:
                         row_sum = {cls: 0 for cls in VEHICLE_CLASSES}
                         for m in range(start_min, end_min):
                             for cls in VEHICLE_CLASSES:
