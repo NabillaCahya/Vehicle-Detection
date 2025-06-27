@@ -590,6 +590,8 @@ if run_analysis or auto_run_analysis:
                     w, h = x2 - x1, y2 - y1
                     bbox = x1, y1, w, h
                     cls = int(box.cls[0])
+                    if box.id is None:
+                        continue  # skip jika tidak ada id
                     id = int(box.id[0])
                     if 0 <= cls < len(model.names):
                         currentClass = model.names[cls]
