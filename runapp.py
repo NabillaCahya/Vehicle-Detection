@@ -533,12 +533,6 @@ if run_analysis or auto_run_analysis:
         cap = cv2.VideoCapture(st.session_state['video_path'])
         frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        LIMITS = [
-            0,
-            int(0.8 * frame_height),
-            frame_width,
-            int(0.8 * frame_height)
-        ]
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 0:
             fps = 30
@@ -548,6 +542,13 @@ if run_analysis or auto_run_analysis:
         total_minutes = int(duration_seconds // 60)
         if duration_seconds % 60 > 0:
             total_minutes += 1
+
+        LIMITS = [
+            0,                      
+            int(0.8 * frame_height),
+            frame_width,            
+            int(0.8 * frame_height) 
+        ]
 
         frame_count, counter, minute_counter, prev_y2_dict, totalcounts, _ = load_progress(user_email, st.session_state['video_hash'], total_minutes)
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count)
@@ -596,9 +597,15 @@ if run_analysis or auto_run_analysis:
                     w, h = x2 - x1, y2 - y1
                     bbox = x1, y1, w, h
                     cls = int(box.cls[0])
-                    if box.id is None:
-                        continue  
-                    id = int(box.id[0])
+                    
+                    id_val = getattr(box, "id", None)
+                    if id_val is None:
+                        continue
+                    
+                    try:
+                        id = int(id_val[0]) if hasattr(id_val, "__getitem__") else int(id_val)
+                    except Exception:
+                        continue
                     if 0 <= cls < len(model.names):
                         currentClass = model.names[cls]
                     else:
@@ -606,11 +613,10 @@ if run_analysis or auto_run_analysis:
                     if currentClass in VEHICLE_COLORS:
                         color, _ = VEHICLE_COLORS[currentClass]
                         cvzone.cornerRect(img, bbox, l=9, rt=5, colorC=color)
-
                         cv2.line(img, (LIMITS[0], LIMITS[1]), (LIMITS[2], LIMITS[3]), (25, 118, 210), 5)
-
                         garis_y = LIMITS[1]
                         prev_y2 = prev_y2_dict.get(str(id), y2)
+                        
                         if prev_y2 < garis_y and y2 >= garis_y:
                             if id not in totalcounts:
                                 totalcounts.append(id)
