@@ -2,10 +2,11 @@
 # Example: pip install -r requirements.txt
 
 # Base ----------------------------------------
-ultralytics
-opencv-python
+opencv-python-headless
 cvzone
-filterpy==1.4.5
-scikit-image
-filterpy
+ultralytics
+streamlit
+matplotlib
+numpy
+sqlite3
 
