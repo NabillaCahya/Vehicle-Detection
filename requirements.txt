@@ -8,5 +8,5 @@ ultralytics
 streamlit
 matplotlib
 numpy
-sqlite3
+
 
