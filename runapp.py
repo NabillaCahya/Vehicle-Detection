@@ -533,6 +533,12 @@ if run_analysis or auto_run_analysis:
         cap = cv2.VideoCapture(st.session_state['video_path'])
         frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        LIMITS = [
+            0,
+            int(0.8 * frame_height),
+            frame_width,
+            int(0.8 * frame_height)
+        ]
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 0:
             fps = 30
@@ -600,6 +606,8 @@ if run_analysis or auto_run_analysis:
                     if currentClass in VEHICLE_COLORS:
                         color, _ = VEHICLE_COLORS[currentClass]
                         cvzone.cornerRect(img, bbox, l=9, rt=5, colorC=color)
+
+                        # Tambahkan ini agar garis selalu muncul
                         cv2.line(img, (LIMITS[0], LIMITS[1]), (LIMITS[2], LIMITS[3]), (25, 118, 210), 5)
 
                         garis_y = LIMITS[1]
