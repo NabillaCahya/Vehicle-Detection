@@ -8,5 +8,8 @@ ultralytics
 streamlit
 matplotlib
 numpy
+lap
+scipy
+cython
 
 
